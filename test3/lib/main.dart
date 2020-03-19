@@ -4,8 +4,8 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import './middleware/index.dart';
 import './container/login.dart';
+import './middleware/index.dart';
 import './presentation/home_page.dart';
 import './presentation/protected_screen.dart';
 
@@ -34,6 +34,7 @@ class App extends StatelessWidget {
       store: store,
       child: MaterialApp(
         title: 'Redux Auth app',
+        debugShowCheckedModeBanner: false,
         routes: {
           '/': (context) {
             return LoginContainer();
