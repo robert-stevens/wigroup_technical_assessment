@@ -11,7 +11,6 @@ class Resource<T> {
 class Webservice {
 
   Future<T> load<T>(Resource<T> resource, String params) async {
-      print(resource.url+params);
       final response = await http.get(resource.url+params);
       if(response.statusCode == 200) {
         return resource.parse(response);

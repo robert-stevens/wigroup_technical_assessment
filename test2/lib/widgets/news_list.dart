@@ -17,13 +17,11 @@ class _NewsListState extends State<NewsList> {
       if (_searchQuery.text.isEmpty) {
         setState(() {
           _IsSearching = false;
-          // _searchText = '';
         });
       }
       else {
         setState(() {
           _IsSearching = true;
-          // _searchText = _searchQuery.text;
           _getNewsArticles(_searchQuery.text);
         });
       }
@@ -36,18 +34,27 @@ class _NewsListState extends State<NewsList> {
   final TextEditingController _searchQuery = TextEditingController();
   List<String> _list;
   bool _IsSearching;
-  // String _searchText = '';
-  List<dynamic> _newsArticles = List<dynamic>(); 
+  List<NewsArticle> _newsArticles = List<NewsArticle>(); 
+  FocusNode myFocusNode;
 
   @override
   void initState() {
     super.initState();
     _IsSearching = false;
-    _populateNewsArticles(); 
+    myFocusNode = FocusNode();
+    _getRandomArticles(); 
   }
 
-  void _populateNewsArticles() {
-    Webservice().load(NewsArticle.all, 'search=bears').then((newsArticles) => {
+  @override
+  void dispose() {
+    // Clean up the focus node when the Form is disposed.
+    myFocusNode.dispose();
+
+    super.dispose();
+  }
+
+  void _getRandomArticles() {
+    Webservice().load(NewsArticle.random, '').then((newsArticles) => {
       setState(() => {
         _newsArticles = newsArticles
       })
@@ -55,22 +62,25 @@ class _NewsListState extends State<NewsList> {
   }
 
   void _getNewsArticles(String text) {
-    Webservice().load(NewsArticle.all, 'search=$text').then((newsArticles) => {
+    Webservice().load(NewsArticle.all, text).then((newsArticles) => {
       setState(() => {
         _newsArticles = newsArticles
       })
     });
   }
 
-  ListTile _buildItemsForListView(BuildContext context, int index) {
-      return ListTile(
-        title: Text(_newsArticles[index], style: const TextStyle(fontSize: 18)),
-        onTap: () {
-          Navigator.of(context).push(
-              MaterialPageRoute<void>(builder: (BuildContext context) {
-            return WebViewWebPage(title: _newsArticles[index], url: 'https://en.wikipedia.org/wiki/${Uri.encodeComponent(_newsArticles[index])}');
-          }));
-        },
+  Card _buildItemsForListView(BuildContext context, int index) {
+      return Card(child:
+        ListTile(
+          title: Text(_newsArticles[index].title, style: const TextStyle(fontSize: 18)),
+          trailing: Icon(Icons.keyboard_arrow_right),
+          onTap: () {
+            Navigator.of(context).push(
+                MaterialPageRoute<void>(builder: (BuildContext context) {
+              return WebViewWebPage(title: _newsArticles[index].title, url: 'https://en.wikipedia.org/wiki/${Uri.encodeComponent(_newsArticles[index].title)}');
+            }));
+          },
+        )
       );
   }
 
@@ -96,9 +106,9 @@ class _NewsListState extends State<NewsList> {
                 actionIcon = Icon(Icons.close, color: Colors.white,);
                 appBarTitle = TextField(
                   controller: _searchQuery,
+                  focusNode: myFocusNode,
                   style: TextStyle(
                     color: Colors.white,
-
                   ),
                   decoration: InputDecoration(
                       prefixIcon: Icon(Icons.search, color: Colors.white),
@@ -121,6 +131,7 @@ class _NewsListState extends State<NewsList> {
     setState(() {
       _IsSearching = true;
     });
+    myFocusNode.requestFocus(); //setting focus to search field
   }
 
   void _handleSearchEnd() {

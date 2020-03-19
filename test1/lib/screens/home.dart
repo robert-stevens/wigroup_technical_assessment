@@ -35,13 +35,23 @@ class _MyHomePageState extends State<MyHomePage> {
   final TextEditingController _searchQuery = TextEditingController();
   String url;
   bool _IsSearching;
+  FocusNode myFocusNode;
   WebViewController _controllerWeb;
 
   @override
   void initState() {
 
     super.initState();
+    myFocusNode = FocusNode();
     url = 'https://www.wigroupinternational.com/';
+  }
+
+  @override
+  void dispose() {
+    // Clean up the focus node when the Form is disposed.
+    myFocusNode.dispose();
+
+    super.dispose();
   }
 
   void _loadUrl(String text) {
@@ -87,6 +97,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 actionIcon = Icon(Icons.close, color: Colors.white,);
                 appBarTitle = TextField(
                   controller: _searchQuery,
+                  focusNode: myFocusNode,
                   style: TextStyle(
                     color: Colors.white,
 
@@ -112,6 +123,7 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _IsSearching = true;
     });
+    myFocusNode.requestFocus(); //setting focus to search field
   }
 
   void _handleSearchEnd() {

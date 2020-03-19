@@ -11,6 +11,7 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       title: 'Networking',
+      debugShowCheckedModeBanner: false,
       home: NewsList()
     );
   }
