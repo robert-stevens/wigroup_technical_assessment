@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class ProtectedScreen extends StatelessWidget {
-  final SharedPreferences prefs;
-  ProtectedScreen({this.prefs});
+class SecondPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
           appBar: AppBar(
-            title: const Text('Protected Screen'),
+            title: const Text('Second Screen'),
           ),
           body: Container(
             padding: const EdgeInsets.all(23.2),
@@ -16,17 +14,9 @@ class ProtectedScreen extends StatelessWidget {
               child: Column(
                 children: <Widget>[
                   Text(
-                    'Protected screen',
+                    'Second screen',
                     style: TextStyle(color: Colors.black),
                   ),
-                  OutlineButton(
-                    onPressed: () {
-                      prefs.remove('token');
-                      Navigator.of(context)
-                        .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
-                    },
-                    child: const Text('Logout'),
-                  )
                 ],
               ),
             ),

@@ -4,10 +4,11 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import './config/app_config.dart' as config;
 import './container/login.dart';
 import './middleware/index.dart';
 import './presentation/home_page.dart';
-import './presentation/protected_screen.dart';
+import './presentation/second_page.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,15 +36,36 @@ class App extends StatelessWidget {
       child: MaterialApp(
         title: 'Redux Auth app',
         debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          fontFamily: 'Poppins',
+          primaryColor: Colors.white,
+          brightness: Brightness.light,
+          accentColor: config.Colors().mainColor(1),
+          focusColor: config.Colors().textSecondeColor(1),
+          hintColor: config.Colors().textAccentColor(1),
+          textTheme: TextTheme(
+            button: TextStyle(color: Colors.white),
+            headline: TextStyle(fontSize: 20.0, color: config.Colors().textSecondeColor(1)),
+            display1: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600, color: config.Colors().textSecondeColor(1)),
+            display2: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w600, color: config.Colors().textSecondeColor(1)),
+            display3: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w700, color:Colors.white),
+            display4: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w300, color: config.Colors().textSecondeColor(1)),
+            subhead: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w500, color: config.Colors().textSecondeColor(1)),
+            title: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600, color: config.Colors().textMainColor(1)),
+            body1: TextStyle(fontSize: 12.0, color: config.Colors().textSecondeColor(1)),
+            body2: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w600, color: config.Colors().textSecondeColor(1)),
+            caption: TextStyle(fontSize: 12.0, color: config.Colors().textAccentColor(0.6)),
+          ),
+        ),
         routes: {
-          '/': (context) {
-            return LoginContainer();
+          '/': (BuildContext context) {
+            return _handleCurrentScreen(prefs);
           },
-          '/home': (context) {
+          '/home': (BuildContext context) {
             return HomePage();
           },
-          '/protected': (context) {
-            return _handleCurrentScreen(prefs);
+          '/second': (BuildContext context) {
+            return SecondPage();
           }
         },
       ),
@@ -51,12 +73,12 @@ class App extends StatelessWidget {
   }
 
   Widget _handleCurrentScreen(SharedPreferences prefs) {
-    print('prefs: ${prefs.getString('token')}');
+    // print('prefs: ${prefs.getString('token')}');
     final dynamic loginedIn = prefs.getString('token') ?? false;
     if (loginedIn != null && loginedIn != false) {
-      return ProtectedScreen(prefs: prefs,);
+      return HomePage(prefs: prefs,);
     } else {
-      return LoginContainer();
+      return const LoginContainer();
     }
   }
 }

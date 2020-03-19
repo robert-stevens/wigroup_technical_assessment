@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
-import '../presentation/login.dart';
+import '../presentation/signin.dart';
 import '../actions/actions.dart';
 import '../models/app_state.dart';
 import '../models/login.dart';
@@ -23,7 +23,7 @@ class LoginContainer extends StatelessWidget {
 class _ViewModel {
   final Login login;
   final Function(
-          String username, String email, String password, BuildContext context)
+          String email, String password, BuildContext context)
       onSave;
 
   _ViewModel({
@@ -34,12 +34,12 @@ class _ViewModel {
   static _ViewModel fromStore(Store<AppState> store) {
     return _ViewModel(
         login: store.state.login,
-        onSave: (String username, String email, String password, BuildContext context) {
+        onSave: (String email, String password, BuildContext context) {
           store.dispatch(LoginAction(Login(
               email: email,
               password: password,
               loading: true,
-              callbackFn: () => Navigator.pushNamed(context, '/home')
+              callbackFn: () => Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false)
               
         )));
   });

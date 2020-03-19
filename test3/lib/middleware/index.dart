@@ -21,14 +21,6 @@ Middleware<AppState> _loginUser() {
     next(action);
     final Login login = store.state.login;
     final Map map = {'email': login.email, 'password': login.password};
-    
-    // _callback () {
-    //   print('failed to login');
-    //   store.dispatch(ChangeLoginAction(Login(error: 'Email or password is incorrect', loading: false)));
-    // }
-    // final res = await apiClient(url, map, _callback);
-
-    // final response = res;
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     // String token = prefs.getString('token');
